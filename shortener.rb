@@ -35,15 +35,30 @@ end
 ###########################################################
 
 get '/' do
-    @links = [] # FIXME
+    @links = Link.all # FIXME
     erb :index
 end
 
 get '/new' do
+    params[:url]
+    link = Link.new
+    link.url = params[:url]
+    link.save
     erb :form
 end
 
+
 post '/new' do
+    newSite = params[:url]
+    
+    unless storage.index(newSite)
+      storage.push(newSite)
+      return newSite
+    end
+
+
+    puts "Site entered is #{newSite}, the array is #{storage}"
+
     # PUT CODE HERE TO CREATE NEW SHORTENED LINKS
 end
 
