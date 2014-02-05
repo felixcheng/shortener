@@ -63,9 +63,7 @@ post '/new' do
     encrpted = SecureRandom.urlsafe_base64
 
     link = Link.find_or_create_by_url :url => newSite, :short_link => encrpted
-    puts link
-    link.inspect
-    encrpted
+    link[:short_link]
 
 end
 
