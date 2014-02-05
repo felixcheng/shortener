@@ -8,20 +8,16 @@
 
 class CreateLinks < ActiveRecord::Migration
     # PUT MIGRATION CODE HERE TO SETUP DATABASE
-
-    def change
+    def self.up
       create_table :links do |t|
         t.text :url
         t.text :short_link
    
         t.timestamps
-      end
+      end    
     end
 
-    #def self.up
-    #end
-
-    #def self.down
-    #end
+    def self.down
+    end
 
 end

@@ -1,6 +1,8 @@
 require 'sinatra'
 require 'active_record'
 require 'pry'
+require 'securerandom'
+
 
 ###########################################################
 # Configuration
@@ -28,6 +30,7 @@ end
 # http://guides.rubyonrails.org/association_basics.html
 
 class Link < ActiveRecord::Base
+    attr_accessible :url, :short_link
 end
 
 ###########################################################
@@ -40,26 +43,30 @@ get '/' do
 end
 
 get '/new' do
-    params[:url]
-    link = Link.new
-    link.url = params[:url]
-    link.save
     erb :form
 end
 
+get '/:short_link' do
+    params[:short_link]
+    link = Link.find_by_short_link params[:short_link]
 
+    if link.nil?
+        erb :form
+    else
+        redirect "http://" + link.url
+    end
+end
+    
 post '/new' do
     newSite = params[:url]
     
-    unless storage.index(newSite)
-      storage.push(newSite)
-      return newSite
-    end
+    encrpted = SecureRandom.urlsafe_base64
 
+    link = Link.find_or_create_by_url :url => newSite, :short_link => encrpted
+    puts link
+    link.inspect
+    encrpted
 
-    puts "Site entered is #{newSite}, the array is #{storage}"
-
-    # PUT CODE HERE TO CREATE NEW SHORTENED LINKS
 end
 
 # MORE ROUTES GO HERE
